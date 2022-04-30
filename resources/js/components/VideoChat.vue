@@ -1,11 +1,9 @@
 <template>
     <div>
-        <h1>Video Chat</h1>
-        
-            <label for="name">Name</label>
-            <input type="text" id="username" name="name" placeholder="Type your name...">
-            <button id="join" @click="submitForm()">Join Room</button>
-        
+        <h1>Video Chat</h1>        
+        <label for="name">Name</label>
+        <input type="text" id="username" name="name" placeholder="Type your name...">
+        <button id="join" @click="submitForm()">Join Room</button>
         <p id="count"></p>
         <div id="container">
             <div id="local" class="participant">
@@ -32,55 +30,6 @@ export default {
         }
     },
     methods : {
-        /*getAccessToken : function () {
-
-            const _this = this
-            const axios = require('axios')
-            
-            // Request a new token
-            axios.get('/api/access_token')
-                .then(function (response) {
-                    _this.accessToken = response.data
-                })
-                .catch(function (error) {
-                    console.log(error);
-                })
-                .then(function () {
-                    _this.connectToRoom();
-                });
-        },
-        connectToRoom : function () {
-
-            const { connect, createLocalVideoTrack } = require('twilio-video');
-
-            connect( this.accessToken, { name:'cool room' }).then(room => {
-                
-                console.log(`Successfully joined a Room: ${room}`);
-
-                const videoChatWindow = document.getElementById('video-chat');
-
-                createLocalVideoTrack().then(track => {
-                    videoChatWindow.appendChild(track.attach());
-                });
-
-                room.on('participantConnected', participant => {
-                    console.log(`Participant "${participant.identity}" connected`);
-
-                    participant.tracks.forEach(publication => {
-                        if (publication.isSubscribed) {
-                            const track = publication.track;
-                            videoChatWindow.appendChild(track.attach());
-                        }
-                    });
-
-                    participant.on('trackSubscribed', track => {
-                        videoChatWindow.appendChild(track.attach());
-                    });
-                });
-            }, error => {
-                console.error(`Unable to connect to Room: ${error.message}`);
-            });
-        },*/
         async addLocalVideo() {
             const localVideo = document.getElementById('local-video');
             const { connect, createLocalVideoTrack } = require('twilio-video');
@@ -118,30 +67,23 @@ export default {
             }
         },
         async connect ({username}){
-            /*const response = await fetch('/get_token', {
-                method: 'POST',
-                headers: {
-                'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({username})
-            })*/
-
             const _this = this;
-
-
             let formData = new FormData;
-            formData.append('username', username);
+            let url = location.href
+            let splited = url.split("/");
+            let room = splited[splited.length-1];
+            console.log(room);
+            
             const axios = require('axios');
-            axios.post('/api/access_token', JSON.stringify({username}),{
+            axios.post('/api/access_token', JSON.stringify({username, room}),{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
             })
                 .then(function (response) {
-                    console.log(response.data)
                     _this.accessToken = response.data;
-                    console.log(response.data)
+                    //console.log(response.data)
                 })
                 .catch(function (error) {
                     console.log(error);

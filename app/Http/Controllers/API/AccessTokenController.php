@@ -28,6 +28,8 @@ class AccessTokenController extends Controller
 
         $identity = $data['username'];
 
+        $room = $data['room'];
+
         // Create an Access Token
         $token = new AccessToken(
             $accountSid,
@@ -39,7 +41,7 @@ class AccessTokenController extends Controller
 
         // Grant access to Video
         $grant = new VideoGrant();
-        $grant->setRoom('cool room');
+        $grant->setRoom($room);
         $token->addGrant($grant);
 
         // Serialize the token as a JWT

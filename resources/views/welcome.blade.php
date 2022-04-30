@@ -22,7 +22,7 @@
     </head>
     <body class="antialiased">
         <div id="app">
-            <video-chat></video-chat>
+            <main-view></main-view>
         </div>
         <script defer src="https://sdk.twilio.com/js/video/releases/2.21.0/twilio-video.min.js"></script>
         <script src="{{ mix('/js/app.js') }}"></script>
