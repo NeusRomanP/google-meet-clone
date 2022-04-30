@@ -8520,6 +8520,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   data: function data() {
     return {
       accessToken: '',
+      navigator: null,
+      hasVideo: true,
+      hasAudio: false,
       connected: false,
       room: null,
       videos: [],
@@ -8532,6 +8535,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   methods: {
     addLocalVideo: function addLocalVideo() {
+      var _this2 = this;
+
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
         var localVideo, _require, connect, createLocalVideoTrack, track;
 
@@ -8547,8 +8552,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 4:
                 track = _context.sent;
                 localVideo.appendChild(track.attach());
+                _this2.hasVideo = true;
 
-              case 6:
+              case 7:
               case "end":
                 return _context.stop();
             }
@@ -8556,92 +8562,112 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee);
       }))();
     },
-    submitForm: function submitForm() {
-      var _this2 = this;
+    addNoVideo: function addNoVideo() {
+      var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
-        var username;
+        var localVideo, template;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _this2.videos = document.getElementsByClassName('participant');
+                localVideo = document.getElementById('local');
+                template = "<div class=\"no-video black\">\n                <div class=\"circle blue\"></div>\n            </div>\n            <div>Yo</div>";
+                localVideo.innerHTML = template;
+                _this3.hasVideo = false;
 
-                if (!_this2.connected) {
-                  _context2.next = 6;
-                  break;
-                }
-
-                _this2.disconnect();
-
-                _this2.joinButton.disabled = false;
-                _this2.joinButton.innerText = 'Join room';
-                return _context2.abrupt("return");
-
-              case 6:
-                if (_this2.connected) {
-                  _context2.next = 26;
-                  break;
-                }
-
-                username = _this2.userNameInput.value;
-                console.log(username);
-
-                if (username) {
-                  _context2.next = 11;
-                  break;
-                }
-
-                return _context2.abrupt("return", alert('Please, provide an username'));
-
-              case 11:
-                _this2.joinButton.disabled = true;
-                _this2.joinButton.innerText = 'Connecting...';
-                _context2.prev = 13;
-                _context2.next = 16;
-                return _this2.connect({
-                  username: username
-                });
-
-              case 16:
-                _this2.joinButton.disabled = false;
-                _this2.joinButton.innerText = 'Leave room';
-                _context2.next = 26;
-                break;
-
-              case 20:
-                _context2.prev = 20;
-                _context2.t0 = _context2["catch"](13);
-                console.log(_context2.t0);
-                alert('Failed to connect');
-                _this2.joinButton.disabled = false;
-                _this2.joinButton.innerText = 'Join room';
-
-              case 26:
+              case 4:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, null, [[13, 20]]);
+        }, _callee2);
+      }))();
+    },
+    submitForm: function submitForm() {
+      var _this4 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+        var username;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _this4.videos = document.getElementsByClassName('participant');
+
+                if (!_this4.connected) {
+                  _context3.next = 6;
+                  break;
+                }
+
+                _this4.disconnect();
+
+                _this4.joinButton.disabled = false;
+                _this4.joinButton.innerText = 'Join room';
+                return _context3.abrupt("return");
+
+              case 6:
+                if (_this4.connected) {
+                  _context3.next = 25;
+                  break;
+                }
+
+                username = _this4.userNameInput.value;
+
+                if (username) {
+                  _context3.next = 10;
+                  break;
+                }
+
+                return _context3.abrupt("return", alert('Please, provide an username'));
+
+              case 10:
+                _this4.joinButton.disabled = true;
+                _this4.joinButton.innerText = 'Connecting...';
+                _context3.prev = 12;
+                _context3.next = 15;
+                return _this4.connect({
+                  username: username
+                });
+
+              case 15:
+                _this4.joinButton.disabled = false;
+                _this4.joinButton.innerText = 'Leave room';
+                _context3.next = 25;
+                break;
+
+              case 19:
+                _context3.prev = 19;
+                _context3.t0 = _context3["catch"](12);
+                console.log(_context3.t0);
+                alert('Failed to connect');
+                _this4.joinButton.disabled = false;
+                _this4.joinButton.innerText = 'Join room';
+
+              case 25:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, null, [[12, 19]]);
       }))();
     },
     connect: function connect(_ref) {
-      var _this3 = this;
+      var _this5 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee6() {
         var username, _this, formData, url, splited, room, axios;
 
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee6$(_context6) {
           while (1) {
-            switch (_context5.prev = _context5.next) {
+            switch (_context6.prev = _context6.next) {
               case 0:
                 username = _ref.username;
-                _this = _this3;
+                _this = _this5;
                 formData = new FormData();
                 url = location.href;
                 splited = url.split("/");
                 room = splited[splited.length - 1];
-                console.log(room);
                 axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
                 axios.post('/api/access_token', JSON.stringify({
                   username: username,
@@ -8652,42 +8678,43 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     'Content-Type': 'application/json'
                   }
                 }).then(function (response) {
-                  _this.accessToken = response.data; //console.log(response.data)
+                  _this.accessToken = response.data;
                 })["catch"](function (error) {
                   console.log(error);
-                }).then( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
-                  var data, _require2, connect, createLocalVideoTrack, index;
+                }).then( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
+                  var data, _require2, connect, createLocalVideoTrack;
 
-                  return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
+                  return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
                     while (1) {
-                      switch (_context4.prev = _context4.next) {
+                      switch (_context5.prev = _context5.next) {
                         case 0:
-                          _context4.next = 2;
+                          _context5.next = 2;
                           return _this.accessToken;
 
                         case 2:
-                          data = _context4.sent;
-                          console.log(data);
+                          data = _context5.sent;
+                          //console.log(data);
                           _require2 = __webpack_require__(/*! twilio-video */ "./node_modules/twilio-video/es5/index.js"), connect = _require2.connect, createLocalVideoTrack = _require2.createLocalVideoTrack;
-                          _context4.next = 7;
-                          return connect(data);
+                          _context5.next = 6;
+                          return connect(data, {
+                            video: _this.hasVideo
+                          });
 
-                        case 7:
-                          _this.room = _context4.sent;
-                          index = 0;
+                        case 6:
+                          _this.room = _context5.sent;
 
                           _this.room.participants.forEach( /*#__PURE__*/function () {
-                            var _ref3 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3(participant) {
-                              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+                            var _ref3 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4(participant) {
+                              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
                                 while (1) {
-                                  switch (_context3.prev = _context3.next) {
+                                  switch (_context4.prev = _context4.next) {
                                     case 0:
-                                      _context3.next = 2;
+                                      _context4.next = 2;
                                       return _this.participantConnected(participant);
 
                                     case 2:
-                                      console.log(participant.identity); //window.onbeforeunload = participantDisconnected(participant);
-
+                                      //console.log(participant.identity);
+                                      //window.onbeforeunload = participantDisconnected(participant);
                                       window.onbeforeunload = function (e) {
                                         e.preventDefault();
 
@@ -8698,12 +8725,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                                         return;
                                       };
 
-                                    case 4:
+                                    case 3:
                                     case "end":
-                                      return _context3.stop();
+                                      return _context4.stop();
                                   }
                                 }
-                              }, _callee3);
+                              }, _callee4);
                             }));
 
                             return function (_x) {
@@ -8712,8 +8739,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                           }());
 
                           _this.room.on('participantConnected', function (remoteParticipant) {
-                            console.log(remoteParticipant.identity);
-
+                            //console.log(remoteParticipant.identity)
                             _this.participantConnected(remoteParticipant);
 
                             _this.videos = document.getElementsByClassName('participant');
@@ -8732,20 +8758,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                           _this.updateParticipantCount();
 
-                        case 14:
+                        case 12:
                         case "end":
-                          return _context4.stop();
+                          return _context5.stop();
                       }
                     }
-                  }, _callee4);
+                  }, _callee5);
                 })));
 
-              case 9:
+              case 8:
               case "end":
-                return _context5.stop();
+                return _context6.stop();
             }
           }
-        }, _callee5);
+        }, _callee6);
       }))();
     },
     disconnect: function disconnect() {
@@ -8771,20 +8797,28 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.count.innerHTML = "".concat(this.room.participants.size + 1, " online users");
     },
     participantConnected: function participantConnected(participant) {
-      var _this4 = this;
+      var _this6 = this;
 
-      var template = "<div id=\"participant-".concat(participant.sid, "\" class=\"participant\">\n                <div class=\"video\"></div>\n                <div>").concat(participant.identity, "</div>\n            </div>");
+      var template = "";
+
+      if (participant.videoTracks.size != 0) {
+        template = "<div id=\"participant-".concat(participant.sid, "\" class=\"participant\">\n                    <div class=\"video\"></div>\n                    <div>").concat(participant.identity, "</div>\n                </div>");
+      } else {
+        template = "<div class=\"participant\" id=\"participant-".concat(participant.sid, "\">\n                    <div class=\"no-video black\">\n                        <div class=\"circle blue\"><p>").concat(participant.identity.charAt(0).toUpperCase(), "</p></div>\n                        \n                    </div>\n                    <div>").concat(participant.identity, "</div>\n                </div>");
+      }
+
+      console.log(participant.videoTracks.size);
       this.container.insertAdjacentHTML('beforeend', template);
       participant.tracks.forEach(function (localTrackPublication) {
         var isSubscribed = localTrackPublication.isSubscribed,
             track = localTrackPublication.track;
 
         if (isSubscribed) {
-          _this4.attachTrack(track, participant);
+          _this6.attachTrack(track, participant);
         }
       });
       participant.on('trackSubscribed', function (track) {
-        _this4.attachTrack(track, participant);
+        _this6.attachTrack(track, participant);
       });
       participant.on('trackUnsubscribed', function (track) {
         return track.detach();
@@ -8797,7 +8831,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     participantDisconnected: function participantDisconnected(participant) {
       var id = "participant-".concat(participant.sid);
-      console.log(id);
       var participant_video = document.getElementById(id);
       participant_video.remove();
       this.updateParticipantCount();
@@ -8813,7 +8846,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     this.joinButton = $('#join');
     this.container = $('#container');
     this.count = $('#count');
-    this.addLocalVideo();
+    this.navigator = navigator || navigator.mediaDevices;
+
+    var _this = this;
+
+    this.navigator.getUserMedia({
+      video: true
+    }, function () {
+      console.log("has video");
+
+      _this.addLocalVideo();
+    }, function () {
+      console.log("doesn't have video");
+
+      _this.addNoVideo();
+    });
   }
 });
 
@@ -31685,10 +31732,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
 /***/ }),
 
-/***/ "./resources/sass/app.scss":
-/*!*********************************!*\
-  !*** ./resources/sass/app.scss ***!
-  \*********************************/
+/***/ "./resources/css/app.css":
+/*!*******************************!*\
+  !*** ./resources/css/app.css ***!
+  \*******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -57719,7 +57766,7 @@ var render = function () {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "home-view" }, [
     _c("div", [
-      _c("label", { attrs: { for: "name" } }, [
+      _c("label", { attrs: { for: "roomname" } }, [
         _vm._v("Enter the name of the room you want to join"),
       ]),
       _vm._v(" "),
@@ -57727,7 +57774,7 @@ var render = function () {
         attrs: {
           type: "text",
           id: "roomname",
-          name: "name",
+          name: "roomname",
           placeholder: "Type the room name...",
         },
       }),
@@ -73365,7 +73412,7 @@ module.exports = JSON.parse('{"_from":"twilio-video@2.0.0","_id":"twilio-video@2
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
 /******/ 	__webpack_require__.O(undefined, ["css/app"], () => (__webpack_require__("./resources/js/app.js")))
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/app"], () => (__webpack_require__("./resources/sass/app.scss")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/app"], () => (__webpack_require__("./resources/css/app.css")))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()

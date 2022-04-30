@@ -19,6 +19,9 @@ export default {
     data: function () {
         return {
             accessToken: '',
+            navigator: null,
+            hasVideo: true,
+            hasAudio: false,
             connected: false,
             room: null,
             videos: [],
@@ -26,7 +29,7 @@ export default {
             joinButton: null,
             form: null,
             container: null,
-            count: null
+            count: null,
         }
     },
     methods : {
@@ -35,6 +38,16 @@ export default {
             const { connect, createLocalVideoTrack } = require('twilio-video');
             const track = await createLocalVideoTrack();
             localVideo.appendChild(track.attach());
+            this.hasVideo = true;
+        },
+        async addNoVideo() {
+            const localVideo = document.getElementById('local');
+            const template = `<div class="no-video black">
+                <div class="circle blue"></div>
+            </div>
+            <div>Yo</div>`
+            localVideo.innerHTML = template;
+            this.hasVideo = false;
         },
         async submitForm(){
             this.videos = document.getElementsByClassName('participant');
@@ -47,7 +60,6 @@ export default {
 
             if(!this.connected){
                 const username = this.userNameInput.value;
-                console.log(username)
                 if(!username){
                     return alert('Please, provide an username');
                 }
@@ -72,7 +84,6 @@ export default {
             let url = location.href
             let splited = url.split("/");
             let room = splited[splited.length-1];
-            console.log(room);
             
             const axios = require('axios');
             axios.post('/api/access_token', JSON.stringify({username, room}),{
@@ -83,7 +94,6 @@ export default {
             })
                 .then(function (response) {
                     _this.accessToken = response.data;
-                    //console.log(response.data)
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -91,15 +101,15 @@ export default {
                 .then(async function () {
                     const data = await _this.accessToken;
 
-                    console.log(data);
+                    //console.log(data);
             
                     const { connect, createLocalVideoTrack } = require('twilio-video');
-
-                    _this.room = await connect(data);
-                    let index = 0;
+                    
+                    _this.room = await connect(data, {video: _this.hasVideo});
+                    
                     _this.room.participants.forEach(async (participant) =>{
                         await _this.participantConnected(participant);
-                        console.log(participant.identity);
+                        //console.log(participant.identity);
                         //window.onbeforeunload = participantDisconnected(participant);
                         window.onbeforeunload = function(e){
                             e.preventDefault()
@@ -113,7 +123,7 @@ export default {
                     });
 
                     _this.room.on('participantConnected', remoteParticipant =>{
-                        console.log(remoteParticipant.identity)
+                        //console.log(remoteParticipant.identity)
                         _this.participantConnected(remoteParticipant)
                         _this.videos = document.getElementsByClassName('participant');
                         
@@ -155,10 +165,26 @@ export default {
             this.count.innerHTML = `${this.room.participants.size + 1} online users`;
         },
         participantConnected(participant){
-            const template = `<div id="participant-${participant.sid}" class="participant">
-                <div class="video"></div>
-                <div>${participant.identity}</div>
-            </div>`
+            let template = "";
+
+            if(participant.videoTracks.size != 0){
+                template = `<div id="participant-${participant.sid}" class="participant">
+                    <div class="video"></div>
+                    <div>${participant.identity}</div>
+                </div>`
+            }else{
+                template = `<div class="participant" id="participant-${participant.sid}">
+                    <div class="no-video black">
+                        <div class="circle blue"><p>${participant.identity.charAt(0).toUpperCase()}</p></div>
+                        
+                    </div>
+                    <div>${participant.identity}</div>
+                </div>`
+            }
+            
+            
+
+            console.log(participant.videoTracks.size);
             
             this.container.insertAdjacentHTML('beforeend', template);
 
@@ -184,12 +210,11 @@ export default {
         },
         participantDisconnected(participant){
             let id = `participant-${participant.sid}`;
-            console.log(id);
             let participant_video = document.getElementById(id);
             participant_video.remove();
             this.updateParticipantCount();
 
-        }
+        },
     },
     mounted : function () {
         const $ = selector => document.querySelector(selector);
@@ -200,7 +225,21 @@ export default {
         this.container = $('#container');
         this.count = $('#count');
 
-        this.addLocalVideo();
+        this.navigator = navigator || navigator.mediaDevices;
+        let _this = this;
+
+        this.navigator.getUserMedia(
+            {video: true},
+            function(){
+                console.log("has video")
+                _this.addLocalVideo();
+            }, 
+            function(){
+                console.log("doesn't have video")
+                _this.addNoVideo();
+            }
+        )
+        
     }
 }
 </script>
