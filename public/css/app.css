@@ -13,7 +13,7 @@ body{
     padding: 10px;
 }
 
-#container{
+.container{
     width: 90%;
     margin: auto;
     display: grid;
@@ -92,4 +92,29 @@ body{
 
 .blue{
     background-color: blue;
+}
+
+@media (max-width: 800px){
+    .container{
+        width: 90%;
+        margin: auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%/2, max(64px, 100%/3)), 1fr));
+        gap: 5px;
+    }
+}
+
+
+@media (max-width: 600px){
+    .container{
+        width: 90%;
+        margin: auto;
+        display: grid;
+        grid-template-columns: 100%;
+        gap: 5px;
+    }
+
+    .more-two-items{
+        grid-template-columns: repeat(auto-fit, minmax(min(100%/2, max(64px, 100%/3)), 1fr));
+    }
 }

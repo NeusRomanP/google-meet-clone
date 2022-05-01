@@ -8796,7 +8796,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.room.disconnect();
       this.count.innerHTML = "";
       this.connected = false;
-      container.classList.add("one-item"); //this.updateParticipantCount();
+      container.classList.add("one-item");
+      container.classList.remove("more-two-items"); //this.updateParticipantCount();
     },
     updateParticipantCount: function updateParticipantCount() {
       var container = document.getElementById("container");
@@ -8804,8 +8805,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       if (this.room.participants.size == 0) {
         container.classList.add("one-item");
+        container.classList.remove("more-two-items");
+      } else if (this.room.participants.size + 1 > 2) {
+        console.log("more than 2 items");
+        container.classList.remove("one-item");
+        container.classList.add("more-two-items");
       } else {
         container.classList.remove("one-item");
+        container.classList.remove("more-two-items");
       }
     },
     participantConnected: function participantConnected(participant) {
@@ -57869,20 +57876,24 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "one-item", attrs: { id: "container" } }, [
-      _c("div", { staticClass: "participant", attrs: { id: "local" } }, [
-        _c("div", { staticClass: "video-container" }, [
-          _c("div", {
-            staticClass: "local-video",
-            attrs: { id: "local-video" },
-          }),
+    return _c(
+      "div",
+      { staticClass: "container one-item", attrs: { id: "container" } },
+      [
+        _c("div", { staticClass: "participant", attrs: { id: "local" } }, [
+          _c("div", { staticClass: "video-container" }, [
+            _c("div", {
+              staticClass: "local-video",
+              attrs: { id: "local-video" },
+            }),
+            _vm._v(" "),
+            _c("div", { staticClass: "responsive" }),
+          ]),
           _vm._v(" "),
-          _c("div", { staticClass: "responsive" }),
+          _c("div", [_vm._v("Yo")]),
         ]),
-        _vm._v(" "),
-        _c("div", [_vm._v("Yo")]),
-      ]),
-    ])
+      ]
+    )
   },
 ]
 render._withStripped = true
