@@ -219,8 +219,9 @@ export default {
         },
         attachTrack(track, participant){
             const video = container.querySelector(`#participant-${participant.sid} .video`);
-            video.appendChild(track.attach());
-            
+            if(this.hasVideo){
+                video.appendChild(track.attach());
+            }
         },
         participantDisconnected(participant){
             let id = `participant-${participant.sid}`;
