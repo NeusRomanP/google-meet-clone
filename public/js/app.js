@@ -8515,6 +8515,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'video-chat',
   data: function data() {
@@ -8572,7 +8575,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context2.prev = _context2.next) {
               case 0:
                 localVideo = document.getElementById('local');
-                template = "<div class=\"no-video black\">\n                <div class=\"circle blue\"></div>\n            </div>\n            <div>Yo</div>";
+                template = "\n            <div class=\"video-container\">\n                <div class=\"no-video black local-video\">\n                    <div class=\"circle blue\"></div>\n                </div>\n                <div class=\"responsive\"></div>\n            </div>\n            <div>Yo</div>";
                 localVideo.innerHTML = template;
                 _this3.hasVideo = false;
 
@@ -8802,9 +8805,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var template = "";
 
       if (participant.videoTracks.size != 0) {
-        template = "<div id=\"participant-".concat(participant.sid, "\" class=\"participant\">\n                    <div class=\"video\"></div>\n                    <div>").concat(participant.identity, "</div>\n                </div>");
+        template = "\n                <div id=\"participant-".concat(participant.sid, "\" class=\"participant\">\n                    <div class=\"video-container\">\n                        <div class=\"video remote-video\"></div>\n                        <div class=\"responsive\"></div>\n                    </div>\n                    <div>").concat(participant.identity, "</div>\n                </div>");
       } else {
-        template = "<div class=\"participant\" id=\"participant-".concat(participant.sid, "\">\n                    <div class=\"no-video black\">\n                        <div class=\"circle blue\"><p>").concat(participant.identity.charAt(0).toUpperCase(), "</p></div>\n                        \n                    </div>\n                    <div>").concat(participant.identity, "</div>\n                </div>");
+        template = "\n                <div class=\"participant\" id=\"participant-".concat(participant.sid, "\">\n                    <div class=\"video-container\">\n                        <div class=\"no-video black remote-video\">\n                            <div class=\"circle blue\"><p>").concat(participant.identity.charAt(0).toUpperCase(), "</p></div>\n                        </div>\n                        <div class=\"responsive\"></div>\n                    </div>\n                    <div>").concat(participant.identity, "</div>\n                </div>");
       }
 
       console.log(participant.videoTracks.size);
@@ -57856,7 +57859,14 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { attrs: { id: "container" } }, [
       _c("div", { staticClass: "participant", attrs: { id: "local" } }, [
-        _c("div", { attrs: { id: "local-video" } }),
+        _c("div", { staticClass: "video-container" }, [
+          _c("div", {
+            staticClass: "local-video",
+            attrs: { id: "local-video" },
+          }),
+          _vm._v(" "),
+          _c("div", { staticClass: "responsive" }),
+        ]),
         _vm._v(" "),
         _c("div", [_vm._v("Yo")]),
       ]),

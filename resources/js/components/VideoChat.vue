@@ -7,7 +7,10 @@
         <p id="count"></p>
         <div id="container">
             <div id="local" class="participant">
-                <div id="local-video"></div>
+                <div class="video-container">
+                    <div id="local-video" class="local-video"></div>
+                    <div class="responsive"></div>
+                </div>
                 <div>Yo</div>
             </div>
         </div>
@@ -42,8 +45,12 @@ export default {
         },
         async addNoVideo() {
             const localVideo = document.getElementById('local');
-            const template = `<div class="no-video black">
-                <div class="circle blue"></div>
+            const template = `
+            <div class="video-container">
+                <div class="no-video black local-video">
+                    <div class="circle blue"></div>
+                </div>
+                <div class="responsive"></div>
             </div>
             <div>Yo</div>`
             localVideo.innerHTML = template;
@@ -168,15 +175,22 @@ export default {
             let template = "";
 
             if(participant.videoTracks.size != 0){
-                template = `<div id="participant-${participant.sid}" class="participant">
-                    <div class="video"></div>
+                template = `
+                <div id="participant-${participant.sid}" class="participant">
+                    <div class="video-container">
+                        <div class="video remote-video"></div>
+                        <div class="responsive"></div>
+                    </div>
                     <div>${participant.identity}</div>
                 </div>`
             }else{
-                template = `<div class="participant" id="participant-${participant.sid}">
-                    <div class="no-video black">
-                        <div class="circle blue"><p>${participant.identity.charAt(0).toUpperCase()}</p></div>
-                        
+                template = `
+                <div class="participant" id="participant-${participant.sid}">
+                    <div class="video-container">
+                        <div class="no-video black remote-video">
+                            <div class="circle blue"><p>${participant.identity.charAt(0).toUpperCase()}</p></div>
+                        </div>
+                        <div class="responsive"></div>
                     </div>
                     <div>${participant.identity}</div>
                 </div>`
