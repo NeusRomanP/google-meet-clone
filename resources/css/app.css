@@ -30,6 +30,7 @@ body{
     display: inline-block;
     position: relative;
     width: 100%;
+    background-color: black;
 }
 
 .local-video, .remote-video{

@@ -24,7 +24,7 @@ export default {
             accessToken: '',
             navigator: null,
             hasVideo: true,
-            hasAudio: false,
+            hasAudio: true,
             connected: false,
             room: null,
             videos: [],
@@ -112,7 +112,7 @@ export default {
             
                     const { connect, createLocalVideoTrack } = require('twilio-video');
                     
-                    _this.room = await connect(data, {video: _this.hasVideo});
+                    _this.room = await connect(data, {video: _this.hasVideo, audio: _this.hasAudio});
                     
                     _this.room.participants.forEach(async (participant) =>{
                         await _this.participantConnected(participant);

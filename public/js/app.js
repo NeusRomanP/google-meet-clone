@@ -8525,7 +8525,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       accessToken: '',
       navigator: null,
       hasVideo: true,
-      hasAudio: false,
+      hasAudio: true,
       connected: false,
       room: null,
       videos: [],
@@ -8700,7 +8700,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                           _require2 = __webpack_require__(/*! twilio-video */ "./node_modules/twilio-video/es5/index.js"), connect = _require2.connect, createLocalVideoTrack = _require2.createLocalVideoTrack;
                           _context5.next = 6;
                           return connect(data, {
-                            video: _this.hasVideo
+                            video: _this.hasVideo,
+                            audio: _this.hasAudio
                           });
 
                         case 6:
