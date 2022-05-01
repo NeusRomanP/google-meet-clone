@@ -8795,10 +8795,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       });
       this.room.disconnect();
       this.count.innerHTML = "";
-      this.connected = false; //this.updateParticipantCount();
+      this.connected = false;
+      container.classList.add("one-item"); //this.updateParticipantCount();
     },
     updateParticipantCount: function updateParticipantCount() {
+      var container = document.getElementById("container");
       this.count.innerHTML = "".concat(this.room.participants.size + 1, " online users");
+
+      if (this.room.participants.size == 0) {
+        container.classList.add("one-item");
+      } else {
+        container.classList.remove("one-item");
+      }
     },
     participantConnected: function participantConnected(participant) {
       var _this6 = this;
@@ -57861,7 +57869,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { attrs: { id: "container" } }, [
+    return _c("div", { staticClass: "one-item", attrs: { id: "container" } }, [
       _c("div", { staticClass: "participant", attrs: { id: "local" } }, [
         _c("div", { staticClass: "video-container" }, [
           _c("div", {

@@ -14,10 +14,16 @@ body{
 }
 
 #container{
-    width: 100%;
+    width: 90%;
+    margin: auto;
     display: grid;
-    grid-template-columns: 48% 48%;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%/2, max(64px, 100%/5)), 1fr));
     gap: 5px;
+}
+
+.one-item{
+    max-width: 700px;
+    margin: auto;
 }
 
 .participant{

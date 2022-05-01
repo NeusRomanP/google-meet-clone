@@ -5,7 +5,7 @@
         <input type="text" id="username" name="name" placeholder="Type your name...">
         <button id="join" @click="submitForm()">Join Room</button>
         <p id="count"></p>
-        <div id="container">
+        <div id="container" class="one-item">
             <div id="local" class="participant">
                 <div class="video-container">
                     <div id="local-video" class="local-video"></div>
@@ -167,10 +167,17 @@ export default {
 
             this.count.innerHTML="";
             this.connected = false;
+            container.classList.add("one-item");
             //this.updateParticipantCount();
         },
         updateParticipantCount(){
+            let container = document.getElementById("container");
             this.count.innerHTML = `${this.room.participants.size + 1} online users`;
+            if(this.room.participants.size == 0){
+                container.classList.add("one-item");
+            }else{
+                container.classList.remove("one-item");
+            }
         },
         participantConnected(participant){
             let template = "";
