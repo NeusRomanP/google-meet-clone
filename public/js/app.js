@@ -8794,8 +8794,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         document.getElementById(element).remove();
       });
       this.room.disconnect();
-      this.connected = false;
-      this.updateParticipantCount();
+      this.count.innerHTML = "";
+      this.connected = false; //this.updateParticipantCount();
     },
     updateParticipantCount: function updateParticipantCount() {
       this.count.innerHTML = "".concat(this.room.participants.size + 1, " online users");

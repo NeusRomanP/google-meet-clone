@@ -162,11 +162,12 @@ export default {
             videos_to_remove.forEach(element => {
                 document.getElementById(element).remove();
             });
-
+            
             this.room.disconnect();
 
+            this.count.innerHTML="";
             this.connected = false;
-            this.updateParticipantCount();
+            //this.updateParticipantCount();
         },
         updateParticipantCount(){
             this.count.innerHTML = `${this.room.participants.size + 1} online users`;
