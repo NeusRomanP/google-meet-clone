@@ -219,7 +219,7 @@ export default {
         },
         attachTrack(track, participant){
             const video = container.querySelector(`#participant-${participant.sid} .video`);
-            if(this.hasVideo){
+            if(video){
                 video.appendChild(track.attach());
             }
         },

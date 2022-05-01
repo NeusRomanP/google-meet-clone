@@ -8832,7 +8832,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     attachTrack: function attachTrack(track, participant) {
       var video = container.querySelector("#participant-".concat(participant.sid, " .video"));
 
-      if (this.hasVideo) {
+      if (video) {
         video.appendChild(track.attach());
       }
     },
