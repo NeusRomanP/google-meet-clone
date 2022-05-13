@@ -166,7 +166,6 @@ export default {
                             e.preventDefault()
                             participantDisconnected(remoteParticipant);
                             return
-                            //participantDisconnected(remoteParticipant);
                         }
                     });
                     _this.room.on('participantDisconnected', _this.participantDisconnected);
