@@ -21,6 +21,13 @@ body{
     gap: 5px;
 }
 
+.color-red{
+    color: red;
+}
+.color-white{
+    color: white;
+}
+
 .one-item{
     max-width: 700px;
     margin: auto;

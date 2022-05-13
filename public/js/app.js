@@ -23444,10 +23444,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['toggleMicro', 'toggleVideo', 'isRemote', 'identity'],
-  mounted: function mounted() {
-    console.log("entra");
-  }
+  props: ['toggleMicro', 'toggleVideo', 'isRemote', 'identity', 'camera_color', 'micro_color'],
+  mounted: function mounted() {}
 });
 
 /***/ }),
@@ -23479,13 +23477,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['toggleMicro', 'toggleVideo', 'isRemote', 'identity'],
+  props: ['toggleMicro', 'toggleVideo', 'isRemote', 'identity', 'micro_color', 'camera_color'],
   data: function data() {
     return {};
   },
-  mounted: function mounted() {
-    console.log(this.isRemote);
-  }
+  mounted: function mounted() {}
 });
 
 /***/ }),
@@ -23564,6 +23560,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -23588,12 +23586,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       HasNoVideo: _HasNoVideoComponent_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
       HasVideo: _HasVideoComponent_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
       tmp: null,
-      remotes: []
+      remotes: [],
+      micro_color: "white",
+      camera_color: "white"
     };
   },
   computed: {
     remoteVideos: function remoteVideos() {
       return this.remotes;
+    },
+    changeCameraColor: function changeCameraColor() {
+      return this.camera_color;
+    },
+    changeMicroColor: function changeMicroColor() {
+      return this.micro_color;
     }
   },
   components: {
@@ -23639,17 +23645,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context2.prev = _context2.next) {
               case 0:
                 localVideo = document.getElementById('local');
-                /*this.tmp = `
-                <div class="video-container">
-                    <div class="no-video black local-video">
-                        <div class="circle blue"></div>
-                    </div>
-                   
-                    <div class="responsive"></div>
-                </div>
-                <div>Yo</div>`
-                localVideo.innerHTML = this.tmp;*/
-
                 _this3.hasVideo = false;
 
               case 2:
@@ -23769,7 +23764,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                         case 2:
                           data = _context5.sent;
-                          //console.log(data);
                           _require2 = __webpack_require__(/*! twilio-video */ "./node_modules/twilio-video/es5/index.js"), connect = _require2.connect, createLocalVideoTrack = _require2.createLocalVideoTrack;
                           _context5.next = 6;
                           return connect(data, {
@@ -23779,6 +23773,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                         case 6:
                           _this.room = _context5.sent;
+
+                          if (!_this.audioEnabled) {
+                            _this.room.localParticipant.audioTracks.forEach(function (publication) {
+                              return publication.track.disable();
+                            });
+                          } else {
+                            _this.room.localParticipant.audioTracks.forEach(function (publication) {
+                              return publication.track.enable();
+                            });
+                          }
 
                           _this.room.participants.forEach( /*#__PURE__*/function () {
                             var _ref3 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4(participant) {
@@ -23790,8 +23794,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                                       return _this.participantConnected(participant);
 
                                     case 2:
-                                      //console.log(participant.identity);
-                                      //window.onbeforeunload = participantDisconnected(participant);
                                       window.onbeforeunload = function (e) {
                                         e.preventDefault();
 
@@ -23815,10 +23817,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                             };
                           }());
 
-                          console.log(_this.room);
-
                           _this.room.on('participantConnected', function (remoteParticipant) {
-                            //console.log(remoteParticipant.identity)
                             _this.participantConnected(remoteParticipant);
 
                             _this.videos = document.getElementsByClassName('participant');
@@ -23830,8 +23829,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                             };
                           });
 
-                          _this.room.on('participantDisconnected', _this.participantDisconnected); //console.log(room);
-
+                          _this.room.on('participantDisconnected', _this.participantDisconnected);
 
                           _this.connected = true;
 
@@ -23882,7 +23880,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         container.classList.add("one-item");
         container.classList.remove("more-two-items");
       } else if (this.room.participants.size + 1 > 2) {
-        console.log("more than 2 items");
         container.classList.remove("one-item");
         container.classList.add("more-two-items");
       } else {
@@ -23895,8 +23892,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       var template = "";
       this.remotes.push(participant);
-      console.log(participant.videoTracks.size); //this.container.insertAdjacentHTML('beforeend', template);
-
       participant.tracks.forEach(function (localTrackPublication) {
         var isSubscribed = localTrackPublication.isSubscribed,
             track = localTrackPublication.track;
@@ -23915,7 +23910,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     attachTrack: function attachTrack(track, participant) {
       var video = container.querySelector("#participant-".concat(participant.sid, " .video"));
-      console.log(video);
 
       if (video) {
         video.appendChild(track.attach());
@@ -23933,18 +23927,27 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           this.room.localParticipant.audioTracks.forEach(function (publication) {
             return publication.track.disable();
           });
+          this.audioEnabled = false;
+          this.micro_color = 'red';
         } else {
           this.room.localParticipant.audioTracks.forEach(function (publication) {
             return publication.track.enable();
           });
+          this.audioEnabled = true;
+          this.micro_color = 'white';
+        }
+      } else {
+        if (this.audioEnabled) {
+          this.audioEnabled = false;
+          this.micro_color = 'red';
+        } else {
+          this.audioEnabled = true;
+          this.micro_color = 'white';
         }
       }
 
-      if (this.audioEnabled) {
-        this.localVideoTrack.mediaStreamTrack.muted = true;
-      } else {
-        this.localVideoTrack.mediaStreamTrack.muted = false;
-      }
+      var mic = document.getElementById('microphone');
+      mic.style.color = this.micro_color;
     },
     toggleVideo: function toggleVideo() {
       if (this.room) {
@@ -23959,16 +23962,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }
       }
 
-      console.log(this.localVideoTrack.mediaStreamTrack);
-
       if (this.videoEnabled) {
         this.hasVideo = false;
         this.videoEnabled = false;
         this.addNoVideo();
+        this.camera_color = "red";
       } else {
         this.videoEnabled = true;
         this.hasVideo = true;
         this.addLocalVideo();
+        this.camera_color = "white";
       }
     }
   },
@@ -23989,12 +23992,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     this.navigator.getUserMedia({
       video: true
     }, function () {
-      console.log("has video");
-
       _this.addLocalVideo();
     }, function () {
-      console.log("doesn't have video");
-
       _this.addNoVideo();
     });
   }
@@ -73077,7 +73076,7 @@ var render = function () {
             { staticClass: "icons" },
             [
               _c("font-awesome-icon", {
-                staticClass: "icon",
+                class: "icon color-" + _vm.micro_color,
                 attrs: { id: "microphone", icon: ["fas", "microphone"] },
                 on: {
                   click: function ($event) {
@@ -73087,7 +73086,7 @@ var render = function () {
               }),
               _vm._v(" "),
               _c("font-awesome-icon", {
-                staticClass: "icon",
+                class: "icon color-" + _vm.camera_color,
                 attrs: { id: "camera", icon: ["fas", "video"] },
                 on: {
                   click: function ($event) {
@@ -73142,7 +73141,7 @@ var render = function () {
             { staticClass: "icons" },
             [
               _c("font-awesome-icon", {
-                staticClass: "icon",
+                class: "icon color-" + _vm.micro_color,
                 attrs: { id: "microphone", icon: ["fas", "microphone"] },
                 on: {
                   click: function ($event) {
@@ -73152,7 +73151,7 @@ var render = function () {
               }),
               _vm._v(" "),
               _c("font-awesome-icon", {
-                staticClass: "icon",
+                class: "icon color-" + _vm.camera_color,
                 attrs: { id: "camera", icon: ["fas", "video"] },
                 on: {
                   click: function ($event) {
@@ -73291,6 +73290,8 @@ var render = function () {
                 isRemote: false,
                 toggleMicro: _vm.toggleMicro,
                 toggleVideo: _vm.toggleVideo,
+                micro_color: _vm.changeMicroColor,
+                camera_color: _vm.camera_color,
               },
             }),
           ],
@@ -73313,6 +73314,8 @@ var render = function () {
                   isRemote: true,
                   toggleMicro: _vm.toggleMicro,
                   toggleVideo: _vm.toggleVideo,
+                  micro_color: _vm.micro_color,
+                  camera_color: _vm.camera_color,
                 },
               }),
             ],

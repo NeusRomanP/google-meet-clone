@@ -5,8 +5,8 @@
                 
             </div>
             <div v-if="!isRemote" class="icons">
-                <font-awesome-icon class="icon" id="microphone" @click="toggleMicro()" :icon="[ 'fas', 'microphone' ]" />
-                <font-awesome-icon class="icon" id="camera" @click="toggleVideo()" :icon="[ 'fas', 'video' ]" />
+                <font-awesome-icon :class="'icon color-'+micro_color" id="microphone" @click="toggleMicro()" :icon="[ 'fas', 'microphone' ]" />
+                <font-awesome-icon :class="'icon color-'+camera_color" id="camera" @click="toggleVideo()" :icon="[ 'fas', 'video' ]" />
             </div>
             <div class="responsive"></div>
         </div>
@@ -19,7 +19,9 @@ export default {
         'toggleMicro',
         'toggleVideo',
         'isRemote',
-        'identity'
+        'identity',
+        'micro_color',
+        'camera_color'
     ],
     data: function(){
         return{
@@ -27,7 +29,7 @@ export default {
         }
     },
     mounted(){
-        console.log(this.isRemote);
+        
     }
 }
 </script>
