@@ -23825,7 +23825,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                             window.onbeforeunload = function (e) {
                               e.preventDefault();
                               participantDisconnected(remoteParticipant);
-                              return; //participantDisconnected(remoteParticipant);
+                              return;
                             };
                           });
 
