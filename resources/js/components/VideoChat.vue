@@ -7,16 +7,19 @@
         <p id="count"></p>
         <div id="container" class="container one-item">
             <div id="local" class="participant">
-                <div class="video-container">
-                    <div id="local-video" class="local-video"></div>
-                    <div class="responsive"></div>
-                </div>
-                <div>Yo</div>
+                <div :is="hasVideo ? HasVideo: HasNoVideo" :identity="'Yo'" :isRemote="false" :toggleMicro="toggleMicro" :toggleVideo="toggleVideo"></div>
             </div>
+           
+           <div v-for="(remote, key) in remotes" :key="key" :id="'participant-'+remote.sid" class="participant">
+                <div :is="remote.videoTracks.size != 0 ? HasVideo: HasNoVideo" :identity="remote.identity" :isRemote="true" :toggleMicro="toggleMicro" :toggleVideo="toggleVideo"></div>
+            </div>
+            
         </div>
     </div>
 </template>
 <script>
+import HasNoVideo from "./HasNoVideoComponent.vue"
+import HasVideo from "./HasVideoComponent.vue"
 export default {
     name: 'video-chat',
     data: function () {
@@ -33,27 +36,48 @@ export default {
             form: null,
             container: null,
             count: null,
+            audioEnabled: true,
+            videoEnabled: true,
+            localVideoTrack: null,
+            HasNoVideo: HasNoVideo,
+            HasVideo: HasVideo,
+            tmp: null,
+            remotes: [],
         }
+    },
+    computed:{
+        remoteVideos(){
+            return this.remotes;
+        }
+    },
+    components: {
+        HasNoVideo: HasNoVideo,
+        HasVideo: HasVideo,
     },
     methods : {
         async addLocalVideo() {
-            const localVideo = document.getElementById('local-video');
-            const { connect, createLocalVideoTrack } = require('twilio-video');
-            const track = await createLocalVideoTrack();
-            localVideo.appendChild(track.attach());
             this.hasVideo = true;
+            
+            const { connect, createLocalVideoTrack } = require('twilio-video');
+            this.localVideoTrack = await createLocalVideoTrack();
+            
+            const localVideo = document.getElementById('local-video');
+            localVideo.appendChild(this.localVideoTrack.attach());
+
+            
         },
         async addNoVideo() {
             const localVideo = document.getElementById('local');
-            const template = `
+            /*this.tmp = `
             <div class="video-container">
                 <div class="no-video black local-video">
                     <div class="circle blue"></div>
                 </div>
+               
                 <div class="responsive"></div>
             </div>
             <div>Yo</div>`
-            localVideo.innerHTML = template;
+            localVideo.innerHTML = this.tmp;*/
             this.hasVideo = false;
         },
         async submitForm(){
@@ -129,6 +153,8 @@ export default {
                         
                     });
 
+                    console.log(_this.room)
+
                     _this.room.on('participantConnected', remoteParticipant =>{
                         //console.log(remoteParticipant.identity)
                         _this.participantConnected(remoteParticipant)
@@ -188,34 +214,13 @@ export default {
         },
         participantConnected(participant){
             let template = "";
-
-            if(participant.videoTracks.size != 0){
-                template = `
-                <div id="participant-${participant.sid}" class="participant">
-                    <div class="video-container">
-                        <div class="video remote-video"></div>
-                        <div class="responsive"></div>
-                    </div>
-                    <div>${participant.identity}</div>
-                </div>`
-            }else{
-                template = `
-                <div class="participant" id="participant-${participant.sid}">
-                    <div class="video-container">
-                        <div class="no-video black remote-video">
-                            <div class="circle blue"><p>${participant.identity.charAt(0).toUpperCase()}</p></div>
-                        </div>
-                        <div class="responsive"></div>
-                    </div>
-                    <div>${participant.identity}</div>
-                </div>`
-            }
             
+            this.remotes.push(participant);
             
 
             console.log(participant.videoTracks.size);
             
-            this.container.insertAdjacentHTML('beforeend', template);
+            //this.container.insertAdjacentHTML('beforeend', template);
 
             participant.tracks.forEach((localTrackPublication) =>{
                 
@@ -234,6 +239,7 @@ export default {
         },
         attachTrack(track, participant){
             const video = container.querySelector(`#participant-${participant.sid} .video`);
+            console.log(video)
             if(video){
                 video.appendChild(track.attach());
             }
@@ -245,6 +251,50 @@ export default {
             this.updateParticipantCount();
 
         },
+        toggleMicro(){
+            if(this.room){
+                if(this.audioEnabled){
+                    this.room.localParticipant.audioTracks.forEach(
+                        publication => publication.track.disable()
+                    );
+                }else{
+                    this.room.localParticipant.audioTracks.forEach(
+                        publication => publication.track.enable()
+                    );
+                }
+            }
+            if(this.audioEnabled){
+                this.localVideoTrack.mediaStreamTrack.muted = true;
+            }else{
+                this.localVideoTrack.mediaStreamTrack.muted = false;
+            }
+            
+        },
+        toggleVideo(){
+            if(this.room){
+                if(this.videoEnabled){
+                    this.room.localParticipant.videoTracks.forEach(
+                        publication => publication.track.disable()
+                    );
+                }else{
+                    this.room.localParticipant.videoTracks.forEach(
+                        publication => publication.track.enable()
+                    );
+                }
+            }
+            
+            console.log(this.localVideoTrack.mediaStreamTrack)
+
+            if(this.videoEnabled){
+                this.hasVideo = false;
+                this.videoEnabled=false;
+                this.addNoVideo();
+            }else{
+                this.videoEnabled=true;
+                this.hasVideo = true;
+                this.addLocalVideo();
+            }
+        }
     },
     mounted : function () {
         const $ = selector => document.querySelector(selector);
