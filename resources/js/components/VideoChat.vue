@@ -117,7 +117,7 @@ export default {
             let room = splited[splited.length-1];
             
             const axios = require('axios');
-            axios.post('/api/access_token', JSON.stringify({username, room}),{
+            axios.post('/access_token', JSON.stringify({username, room}),{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
