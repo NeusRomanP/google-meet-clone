@@ -22,6 +22,6 @@
             <main-view></main-view>
         </div>
         <script defer src="https://sdk.twilio.com/js/video/releases/2.21.0/twilio-video.min.js"></script>
-        <script src="{{ mix('/js/app.js') }}"></script>
+        <script type="application/javascript" src="{{ mix('/js/app.js') }}"></script>
     </body>
 </html>
