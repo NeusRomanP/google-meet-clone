@@ -20,3 +20,5 @@ Route::get('/', function () {
 Route::get('/{room}', function () {
     return view('welcome');
 });
+
+Route::post('/api/access_token', [App\Http\Controllers\API\AccessTokenController::class, 'generate_token']);
